@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina OS | Ecosystem</title>
+    
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Poppins:wght@800&display=swap" rel="stylesheet">
+    
+    <!-- Remix Icon CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --lumina-blue: #4facfe;
+            --lumina-purple: #a18cd1;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- LOGO --- */
+        nav {
+            width: 100%; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(5, 5, 5, 0.95); border-bottom: 1px solid var(--border-color);
+            position: fixed; top: 0; z-index: 100; backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #7F7FD5 0%, #86A8E7 50%, #91EAE4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+
+        /* --- NAVIGATION --- */
+        .nav-links { display: flex; gap: 30px; background: #111; padding: 5px; border-radius: 50px; border: 1px solid #222; }
+        .nav-item {
+            color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600;
+            padding: 8px 20px; border-radius: 30px; transition: 0.3s; cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .nav-item:hover { color: white; }
+        .nav-item.active { background: #222; color: white; box-shadow: 0 0 15px rgba(255,255,255,0.05); }
+
+        /* --- LAYOUT --- */
+        .container {
+            margin-top: 120px; width: 100%; max-width: 900px; padding: 20px;
+            text-align: center;
+        }
+        .main-view { display: none; animation: fadeIn 0.4s ease; }
+        .main-view.active-view { display: block; }
+
+        /* --- TABS --- */
+        h1 {
+            font-size: 90px; font-weight: 800; margin-bottom: 5px;
+            background: linear-gradient(to bottom, #fff, #999);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .subtitle { color: var(--text-muted); margin-bottom: 40px; font-size: 18px; display: flex; justify-content: center; gap: 8px;}
+
+        .tab-container {
+            display: inline-flex; background: #111; padding: 5px; border-radius: 50px;
+            margin-bottom: 40px; border: 1px solid var(--border-color);
+        }
+        .tab-btn {
+            padding: 12px 35px; border-radius: 40px; border: none; background: transparent;
+            color: var(--text-muted); font-weight: 600; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .tab-btn.active { background: var(--lumina-blue); color: #fff; box-shadow: 0 0 20px rgba(79, 172, 254, 0.4); }
+
+        /* --- PANELS & WIDGETS --- */
+        .panel { display: none; grid-template-columns: repeat(2, 1fr); gap: 20px; text-align: left; }
+        .panel.active { display: grid; }
+        
+        .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 25px; }
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 20px; align-items: center;}
+        .card-title { font-weight: 600; display: flex; align-items: center; gap: 10px; color: #fff; }
+
+        .widget-item {
+            background: #1a1a1a; border: 1px solid transparent; border-radius: 15px; padding: 15px;
+            color: #888; cursor: pointer; transition: all 0.2s ease; display: flex;
+            flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+        }
+        .widget-item:hover { background: #252525; color: white; }
+        .widget-item.active {
+            background: rgba(79, 172, 254, 0.15) !important; border-color: var(--lumina-blue) !important;
+            color: var(--lumina-blue) !important; box-shadow: 0 0 15px rgba(79, 172, 254, 0.2);
+        }
+
+        .widget-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .height-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .height-btn { height: 90px; font-size: 13px; text-align: center;}
+        .height-btn i { font-size: 22px; margin-bottom: 4px; }
+
+        /* --- CHAIR CONTROLS --- */
+        .heat-controls { display: flex; gap: 10px; margin-top: 10px; }
+        .heat-btn {
+            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #333;
+            background: #222; color: #666; cursor: pointer; text-align: center; font-size: 14px;
+        }
+        .heat-btn:hover { background: #333; }
+        .heat-btn.active-low { background: #4a2c2c; color: #ffadad; border-color: #ffadad; }
+        .heat-btn.active-med { background: #662222; color: #ff5e5e; border-color: #ff5e5e; }
+        .heat-btn.active-high { background: #991111; color: white; border-color: red; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
+
+        .massage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .massage-btn {
+            background: #222; padding: 15px; border-radius: 12px; text-align: center;
+            color: #aaa; cursor: pointer; border: 1px solid transparent; display: flex; flex-direction: column; align-items: center; gap: 5px;
+        }
+        .massage-btn i { font-size: 20px; }
+        .massage-btn.active { 
+            border-color: var(--lumina-purple); color: var(--lumina-purple); 
+            background: rgba(161, 140, 209, 0.1); 
+        }
+
+        /* --- MODAL --- */
+        .app-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            z-index: 200; display: none; justify-content: center; align-items: center;
+        }
+        .app-overlay.open { display: flex; }
+        .app-window { width: 400px; background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .close-btn { background: none; border: none; color: #666; font-size: 20px; cursor: pointer; float: right; }
+        .close-btn:hover { color: white; }
+
+        /* --- EXTRA CSS FOR WIDGET CONTENT --- */
+        .app-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #222; font-size: 14px; color: #ccc; }
+        .app-row:last-child { border-bottom: none; }
+        .app-icon { color: var(--lumina-blue); margin-right: 10px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 50px; }
+            .panel, .height-grid, .widget-grid, .stat-grid { grid-template-columns: 1fr; }
+            .nav-links span { display: none; }
+        }
+
+        /* --- SCHEDULE & PROFILE STYLES --- */
+        .timeline-item { display: flex; gap: 20px; padding: 15px; background: #111; border-radius: 15px; margin-bottom: 15px; border-left: 4px solid #333; align-items: center; }
+        .timeline-item.active { border-left-color: var(--lumina-blue); background: #1a1a20; }
+        .time-badge { font-weight: bold; font-size: 18px; width: 100px; }
+        
+        .profile-header { display: flex; align-items: center; gap: 20px; margin-bottom: 30px; text-align: left; }
+        .avatar { width: 80px; height: 80px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .stat-card { background: #151515; padding: 20px; border-radius: 15px; text-align: center; }
+        .stat-val { font-size: 24px; font-weight: 800; color: var(--lumina-blue); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">LUMINA</div>
+        <div class="nav-links">
+            <div class="nav-item active" onclick="switchMainView('view-control', this)">
+                <i class="ri-dashboard-line"></i> <span>Control</span>
+            </div>
+            <div class="nav-item" onclick="switchMainView('view-schedule', this)">
+                <i class="ri-calendar-line"></i> <span>Schedule</span>
+            </div>
+            <div class="nav-item" onclick="switchMainView('view-profile', this)">
+                <i class="ri-user-line"></i> <span>Profile</span>
+            </div>
+        </div>
+        <div style="width: 80px;"></div>
+    </nav>
+
+    <div class="container">
+
+        <!-- ================= VIEW 1: CONTROL DASHBOARD ================= -->
+        <div id="view-control" class="main-view active-view">
+            <h1 id="main-display">72 <span style="font-size: 30px; vertical-align: top;">cm</span></h1>
+            <p class="subtitle" id="status-text"><i class="ri-lock-2-line"></i> Desk is locked in Sit Mode</p>
+
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="switchSubTab('desk', this)">
+                    <i class="ri-macbook-line"></i> Smart Desk
+                </button>
+                <button class="tab-btn" onclick="switchSubTab('chair', this)">
+                    <i class="ri-armchair-line"></i> Ergo Chair
+                </button>
+            </div>
+
+            <!-- DESK SUB-PANEL -->
+            <div id="desk-panel" class="panel active">
+                <div class="card" style="grid-column: span 2;">
+                    <div class="card-header"><span class="card-title"><i class="ri-arrow-up-down-line"></i> Height Presets</span></div>
+                    <div class="height-grid">
+                        <div class="widget-item height-btn active" onclick="changeHeight(72, 'Sit Mode', this)"><i class="ri-sofa-line"></i> Sit<br><span>72cm</span></div>
+                        <div class="widget-item height-btn" onclick="changeHeight(110, 'Stand Mode', this)"><i class="ri-walk-line"></i> Stand<br><span>110cm</span></div>
+                        <div class="widget-item height-btn" onclick="changeHeight(95, 'Drafting', this)"><i class="ri-pencil-ruler-2-line"></i> Draft<br><span>95cm</span></div>
+                        <div class="widget-item height-btn" onclick="changeHeight(65, 'Lounge', this)"><i class="ri-cup-line"></i> Lounge<br><span>65cm</span></div>
+                    </div>
+                </div>
+                <div class="card" style="grid-column: span 2;">
+                    <div class="card-header"><span class="card-title"><i class="ri-apps-2-line"></i> Smart Widgets</span></div>
+                    <div class="widget-grid">
+                        <div class="widget-item" onclick="openApp('spotify')"><i class="ri-spotify-fill"></i> Spotify</div>
+                        <div class="widget-item" onclick="openApp('calendar')"><i class="ri-calendar-event-fill"></i> Calendar</div>
+                        <div class="widget-item" onclick="openApp('stocks')"><i class="ri-stock-fill"></i> Stocks</div>
+                        <div class="widget-item" onclick="openApp('focus')"><i class="ri-timer-flash-fill"></i> Focus</div>
+                        <div class="widget-item" onclick="openApp('gmail')"><i class="ri-mail-unread-fill"></i> Gmail</div>
+                        <div class="widget-item" onclick="openApp('tasks')"><i class="ri-checkbox-circle-fill"></i> Tasks</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAIR SUB-PANEL -->
+            <div id="chair-panel" class="panel">
+                <div class="card">
+                    <div class="card-header"><span class="card-title"><i class="ri-body-scan-line"></i> Posture Score</span></div>
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 10px;">
+                        <i class="ri-user-heart-line" style="font-size: 55px; color: #00ff9d; text-shadow: 0 0 20px rgba(0,255,157,0.3);"></i>
+                        <div style="display: flex; flex-direction: column; gap: 5px; color: #00ff9d;">
+                            <i class="ri-checkbox-circle-fill" style="font-size: 10px; opacity: 1"></i>
+                            <i class="ri-checkbox-circle-fill" style="font-size: 10px; opacity: 0.8"></i>
+                            <i class="ri-checkbox-circle-fill" style="font-size: 10px; opacity: 0.6"></i>
+                            <i class="ri-checkbox-circle-fill" style="font-size: 10px; opacity: 0.4"></i>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color:white;">98% Alignment</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title"><i class="ri-fire-line"></i> Seat Heat</span></div>
+                    <div class="heat-controls">
+                        <div class="heat-btn" onclick="setHeat(0, this)">Off</div>
+                        <div class="heat-btn" onclick="setHeat(1, this)">Low</div>
+                        <div class="heat-btn" onclick="setHeat(2, this)">Med</div>
+                        <div class="heat-btn" onclick="setHeat(3, this)">Max</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title"><i class="ri-pulse-line"></i> Haptic Massage</span></div>
+                    <div class="massage-grid">
+                        <div class="massage-btn" onclick="toggleMassage(this)"><i class="ri-pulse-line"></i> Pulse</div>
+                        <div class="massage-btn" onclick="toggleMassage(this)"><i class="ri-wireless-charging-line"></i> Wave</div>
+                        <div class="massage-btn" onclick="toggleMassage(this)"><i class="ri-zzz-line"></i> Relax</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title"><i class="ri-drag-move-2-line"></i> Recline Lock</span></div>
+                    <div class="widget-item" onclick="this.classList.toggle('active')" style="flex-direction: row; justify-content: space-between; padding: 0 20px; height: 60px;">
+                        <span>Adaptive Tilt</span>
+                        <i class="ri-lock-unlock-line" style="font-size: 20px;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= VIEW 2: SCHEDULE ================= -->
+        <div id="view-schedule" class="main-view">
+            <h1 style="font-size: 40px;">Daily Routine</h1>
+            <p class="subtitle">Automated height adjustments</p>
+            <div style="max-width: 600px; margin: 0 auto; text-align: left;">
+                <div class="timeline-item active">
+                    <div class="time-badge" style="color: var(--lumina-blue)">09:00 AM</div>
+                    <div style="flex:1">
+                        <div style="color: white; font-weight: 600;">Start Work (Sit)</div>
+                        <div style="color: #666; font-size: 13px;">Desk lowers to 72cm. Lighting to Cool White.</div>
+                    </div>
+                    <i class="ri-sofa-line" style="color: #666;"></i>
+                </div>
+                <div class="timeline-item">
+                    <div class="time-badge">10:45 AM</div>
+                    <div style="flex:1">
+                        <div style="color: white; font-weight: 600;">Stand Session</div>
+                        <div style="color: #666; font-size: 13px;">Desk rises to 110cm. Spotify "Deep Focus" starts.</div>
+                    </div>
+                    <i class="ri-walk-line" style="color: #666;"></i>
+                </div>
+                <div class="timeline-item">
+                    <div class="time-badge">01:00 PM</div>
+                    <div style="flex:1">
+                        <div style="color: white; font-weight: 600;">Lunch Break</div>
+                        <div style="color: #666; font-size: 13px;">System enters Low Power Mode.</div>
+                    </div>
+                    <i class="ri-cup-line" style="color: #666;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= VIEW 3: PROFILE ================= -->
+        <div id="view-profile" class="main-view">
+            <div class="profile-header">
+                <div class="avatar"><i class="ri-user-smile-line"></i></div>
+                <div>
+                    <h2 style="color: white;">Aryan Sagar</h2>
+                    <p style="color: #888;">Lumina Pro Member</p>
+                </div>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-card"><div class="stat-val">4.5h</div><div style="color:#666; font-size:12px">Standing Today</div></div>
+                <div class="stat-card"><div class="stat-val">92%</div><div style="color:#666; font-size:12px">Avg Posture</div></div>
+                <div class="stat-card"><div class="stat-val">12</div><div style="color:#666; font-size:12px">Routine Cycles</div></div>
+            </div>
+            <div class="card" style="margin-top: 20px; text-align: left;">
+                <div class="card-header"><span class="card-title">Device Settings</span></div>
+                <div class="widget-item" style="flex-direction: row; justify-content: space-between; margin-bottom: 10px;">
+                    <span>Sync with Apple Health</span><i class="ri-toggle-fill" style="color: var(--lumina-blue); font-size: 24px;"></i>
+                </div>
+                <div class="widget-item" style="flex-direction: row; justify-content: space-between;">
+                    <span>Auto-Correction Haptics</span><i class="ri-toggle-fill" style="color: var(--lumina-blue); font-size: 24px;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP MODAL (Overlay) -->
+    <div id="overlay" class="app-overlay">
+        <div class="app-window">
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:15px;">
+                <h3 style="color:white" id="modal-title">App</h3>
+                <button class="close-btn" onclick="document.getElementById('overlay').classList.remove('open')"><i class="ri-close-line"></i></button>
+            </div>
+            <div id="modal-content">
+                <!-- Content Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchMainView(viewId, navItem) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            navItem.classList.add('active');
+            document.querySelectorAll('.main-view').forEach(v => v.classList.remove('active-view'));
+            document.getElementById(viewId).classList.add('active-view');
+        }
+
+        function switchSubTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            if(tab === 'desk') {
+                document.getElementById('desk-panel').classList.add('active');
+                document.getElementById('main-display').innerHTML = '72 <span style="font-size: 30px; vertical-align: top;">cm</span>';
+                document.getElementById('status-text').innerText = "Desk is locked in Sit Mode";
+            } else {
+                document.getElementById('chair-panel').classList.add('active');
+                document.getElementById('main-display').innerHTML = '98 <span style="font-size: 30px; vertical-align: top;">%</span>';
+                document.getElementById('status-text').innerText = "Ergonomic Systems Active";
+            }
+        }
+
+        let currentHeight = 72;
+        function changeHeight(target, text, btn) {
+            document.querySelectorAll('.height-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const display = document.getElementById('main-display');
+            const status = document.getElementById('status-text');
+            status.innerText = "Adjusting...";
+            const interval = setInterval(() => {
+                if (currentHeight < target) currentHeight++;
+                else if (currentHeight > target) currentHeight--;
+                else { clearInterval(interval); status.innerHTML = `<i class="ri-check-line"></i> ${text} Active`; }
+                display.innerHTML = `${currentHeight} <span style="font-size: 30px; vertical-align: top;">cm</span>`;
+            }, 10);
+        }
+
+        function setHeat(level, btn) {
+            document.querySelectorAll('.heat-btn').forEach(b => b.className = 'heat-btn');
+            if(level === 1) btn.classList.add('active-low');
+            if(level === 2) btn.classList.add('active-med');
+            if(level === 3) btn.classList.add('active-high');
+        }
+
+        function toggleMassage(btn) {
+            document.querySelectorAll('.massage-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // --- NEW FUNCTIONAL WIDGETS LOGIC ---
+        function openApp(name) {
+            document.getElementById('overlay').classList.add('open');
+            const title = document.getElementById('modal-title');
+            const content = document.getElementById('modal-content');
+            
+            title.innerText = name.toUpperCase();
+            
+            let htmlContent = '';
+
+            if(name === 'spotify') {
+                htmlContent = `
+                    <div style="text-align:center">
+                        <div style="width:120px; height:120px; background:#333; margin:0 auto 15px; border-radius:10px; display:flex; align-items:center; justify-content:center"><i class="ri-music-2-fill" style="font-size:50px; color:#4facfe"></i></div>
+                        <h3 style="color:white; margin-bottom:5px">Deep Focus</h3>
+                        <p style="color:#888; font-size:12px">Lumina Ambience</p>
+                        <div style="display:flex; justify-content:center; gap:20px; margin-top:20px; font-size:24px; color:white">
+                            <i class="ri-skip-back-fill" style="cursor:pointer"></i> 
+                            <i class="ri-play-circle-fill" style="font-size:40px; color:#4facfe; margin:-8px 0; cursor:pointer"></i> 
+                            <i class="ri-skip-forward-fill" style="cursor:pointer"></i>
+                        </div>
+                    </div>`;
+            } 
+            else if(name === 'calendar') {
+                htmlContent = `
+                    <div class="app-row"><span class="app-icon"><i class="ri-time-line"></i> 10:00 AM</span> Team Sync</div>
+                    <div class="app-row"><span class="app-icon"><i class="ri-time-line"></i> 01:00 PM</span> Lunch w/ Aryan</div>
+                    <div class="app-row"><span class="app-icon"><i class="ri-time-line"></i> 03:30 PM</span> Product Review</div>
+                    <div class="app-row"><span class="app-icon"><i class="ri-time-line"></i> 06:00 PM</span> Gym Session</div>`;
+            }
+            else if(name === 'stocks') {
+                htmlContent = `
+                    <div class="app-row"><span>AAPL</span> <span style="color:#00ff9d">+1.24%</span></div>
+                    <div class="app-row"><span>TSLA</span> <span style="color:#ff4d4d">-0.85%</span></div>
+                    <div class="app-row"><span>NVDA</span> <span style="color:#00ff9d">+2.10%</span></div>
+                    <div class="app-row"><span>BTC</span> <span style="color:#00ff9d">+0.50%</span></div>`;
+            }
+            else if(name === 'tasks') {
+                htmlContent = `
+                    <div class="app-row"><span class="app-icon"><i class="ri-checkbox-circle-line"></i></span> Review Design Specs</div>
+                    <div class="app-row"><span style="color:#666; margin-right:10px"><i class="ri-checkbox-blank-circle-line"></i></span> Email Client</div>
+                    <div class="app-row"><span style="color:#666; margin-right:10px"><i class="ri-checkbox-blank-circle-line"></i></span> Order Ergonomic Mat</div>`;
+            }
+            else if(name === 'gmail') {
+                htmlContent = `
+                    <div class="app-row"><span class="app-icon"><i class="ri-mail-line"></i></span> <b>Sarah K.</b> - Project Update</div>
+                    <div class="app-row"><span class="app-icon"><i class="ri-mail-line"></i></span> <b>Lumina Support</b> - Shipped</div>
+                    <div class="app-row"><span class="app-icon"><i class="ri-mail-open-line"></i></span> <b>Newsletter</b> - Weekly Digest</div>`;
+            }
+            else if(name === 'focus') {
+                htmlContent = `
+                    <div style="text-align:center; padding:20px;">
+                        <div style="font-size:60px; font-weight:800; color:white; margin-bottom:20px">25:00</div>
+                        <button style="background:#4facfe; border:none; color:white; padding:10px 30px; border-radius:20px; font-weight:bold; cursor:pointer">Start Timer</button>
+                    </div>`;
+            }
+
+            content.innerHTML = htmlContent;
+        }
+    </script>
+</body>
+</html>
